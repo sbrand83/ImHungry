@@ -8,8 +8,21 @@ firefox_capabilities['marionette'] = True
 firefox_capabilities['binary'] = '/usr/bin/firefox'
 
 browser = webdriver.Firefox(capabilities=firefox_capabilities)
+
+# Stefan and his friends are SUPER hungry.  There are restaurants all over the place
+# but none of them really stand out.  There is an extreme case of indecisiveness that can
+# not be cure. But luckily there is a cool webapp called ImHungry to save the day.
+
+# Stefan opens up his browser and goes to ImHungry.domainnamethathasnotbeendecidedorboughtyet
 browser.get('http://localhost:8000')
 
-assert 'Django' in browser.title
+# Stefan can see the title of the page says "I'm Hungry!"
+assert "I'm Hungry!" in browser.title
+
+# Stefan sees a big header at the top that says "I'm Hungry!"
+
+# Stefan sees that his location has been found
+
+# There is a map in the center of the screen that shows this location
 
 browser.quit()
