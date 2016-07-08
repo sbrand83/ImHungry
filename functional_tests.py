@@ -1,28 +1,49 @@
 from selenium import webdriver
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
-# have to do this because the Firefox 47 didn't work with the Selenium 2.53
-# driver
-firefox_capabilities = DesiredCapabilities.FIREFOX
-firefox_capabilities['marionette'] = True
-firefox_capabilities['binary'] = '/usr/bin/firefox'
+import unittest
 
-browser = webdriver.Firefox(capabilities=firefox_capabilities)
+class NewVisitorTest(unittest.TestCase):
 
-# Stefan and his friends are SUPER hungry.  There are restaurants all over the place
-# but none of them really stand out.  There is an extreme case of indecisiveness that can
-# not be cure. But luckily there is a cool webapp called ImHungry to save the day.
+    def setUp(self):
+        # have to do this because the Firefox 47 didn't work with the Selenium 2.53
+        # driver
+        firefox_capabilities = DesiredCapabilities.FIREFOX
+        firefox_capabilities['marionette'] = True
+        firefox_capabilities['binary'] = '/usr/bin/firefox'
 
-# Stefan opens up his browser and goes to ImHungry.domainnamethathasnotbeendecidedorboughtyet
-browser.get('http://localhost:8000')
+        self.browser = webdriver.Firefox(capabilities=firefox_capabilities)
+        self.browser.implicitly_wait(3) #waits up to 3 seconds to check everything
 
-# Stefan can see the title of the page says "I'm Hungry!"
-assert "I'm Hungry!" in browser.title
+    def tearDown(self):
+        self.browser.quit()
 
-# Stefan sees a big header at the top that says "I'm Hungry!"
+    def test_can_find_random_restaurant_and_get_directions(self):
+        # Stefan and his friends are SUPER hungry.  There are restaurants all over the place
+        # but none of them really stand out.  There is an extreme case of indecisiveness that can
+        # not be cure. But luckily there is a cool webapp called ImHungry to save the day.
 
-# Stefan sees that his location has been found
+        # Stefan opens up his browser and goes to ImHungry.domainnamethathasnotbeendecidedorboughtyet
+        self.browser.get('http://localhost:8000')
 
-# There is a map in the center of the screen that shows this location
+        # Stefan can see the title of the page says "I'm Hungry!"
+        self.assertIn("I'm Hungry!", self.browser.title)
+        self.fail("Finish the tests!")
 
-browser.quit()
+        # Stefan sees a big header at the top that says "I'm Hungry!"
+
+        # Stefan sees that his location has been found
+
+        # There is a map in the center of the screen that shows this location
+
+        # There is button that when clicked picks a random restaurant
+
+        # The location of the restaurant is displayed on the map
+
+        # Information about the restaurant appears below the map
+
+        # There are directions to the restaurant from Stefan's current location
+        # on the map
+
+if __name__ == '__main__':
+    unittest.main(warnings='ignore')
