@@ -28,13 +28,19 @@ class NewVisitorTest(unittest.TestCase):
 
         # Stefan can see the title of the page says "I'm Hungry!"
         self.assertIn("I'm Hungry!", self.browser.title)
-        self.fail("Finish the tests!")
 
         # Stefan sees a big header at the top that says "I'm Hungry!"
+        header_text = self.browser.find_element_by_tag_name('h1').text
+        self.assertIn("I'm Hungry!", header_text)
 
         # Stefan sees that his location has been found
+        location_text = self.browser.find_element_by_id('location_text').text
+        self.assertIn('Your Location: ', location_text)
 
         # There is a map in the center of the screen that shows this location
+        the_map = self.browser.find_element_by_id('map')
+        self.assertNotNone(the_map)
+        self.fail("Finish the tests!")
 
         # There is button that when clicked picks a random restaurant
 
