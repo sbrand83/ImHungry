@@ -2,6 +2,7 @@ from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
+import testing_settings
 import unittest
 
 class NewVisitorTest(unittest.TestCase):
@@ -13,7 +14,13 @@ class NewVisitorTest(unittest.TestCase):
         firefox_capabilities['marionette'] = True
         firefox_capabilities['binary'] = '/usr/bin/firefox'
 
-        self.browser = webdriver.Firefox(capabilities=firefox_capabilities)
+        profile = webdriver.FirefoxProfile()
+        profile.set_preference("geo.prompt.testing", True)
+
+        # allows geolocation if setting enabled from testing_settings
+        profile.set_preference("geo.prompt.testing.allow", testing_settings.GEOLOCATION_ENABLED)
+
+        self.browser = webdriver.Firefox(capabilities=firefox_capabilities, firefox_profile=profile)
         self.browser.implicitly_wait(3) #waits up to 3 seconds to check everything
 
     def tearDown(self):
@@ -41,24 +48,31 @@ class NewVisitorTest(unittest.TestCase):
         # If the location is not found or there is another error, there is a
         # text input to manually enter in the current location.
         location_error = self.browser.find_element_by_id('location_error')
-        if 'visible' in location_error.get_attribute('class').split():
-            print('There was an error finding location')
-        try:
-            location_error = self.browser.find_element_by_css_selector('#location_error.visible')
+        location_input = self.browser.find_element_by_id('location_input')
 
-            # should be error with finding location
-            location_input = self.browser.find_element_by_id('location_input')
+        if not testing_settings.GEOLOCATION_ENABLED:
+            print('Geolocation disabled')
+
+            self.assertIn('visible', location_error.get_attribute("class").split())
+            self.assertIn('visible', location_input.get_attribute("class").split())
+
             self.assertEqual(
                     location_input.get_attribute('placeholder'),
-                    'Enter in your location'
+                    'Enter your location'
             )
-        except NoSuchElementException:
-            print("There was no error with finding location")
+        else:
+            print('Geolocation enabled')
+
+            self.assertIn('hidden', location_error.get_attribute("class").split())
+            self.assertIn('hidden', location_input.get_attribute("class").split())
+
+
+        # The page gets redirected to show a map
+        self.fail("Finish the tests!")
 
         # There is a map in the center of the screen that shows this location
         the_map = self.browser.find_element_by_id('map')
         self.assertIsNotNone(the_map)
-        self.fail("Finish the tests!")
 
         # There is button that when clicked picks a random restaurant
 
