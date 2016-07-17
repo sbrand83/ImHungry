@@ -1,13 +1,11 @@
-from django.test import LiveServerTestCase
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
-from selenium.webdriver.common.keys import Keys
 
 import testing_settings
 import unittest
 
-class NewVisitorTest(LiveServerTestCase):
+class NewVisitorTest(unittest.TestCase):
 
     def setUp(self):
         # have to do this because the Firefox 47 didn't work with the Selenium 2.53
@@ -62,12 +60,6 @@ class NewVisitorTest(LiveServerTestCase):
                     location_input.get_attribute('placeholder'),
                     'Enter your location'
             )
-
-            # Stefan manually enters in his address
-            location_input.send_keys('Chicago')
-
-            # Stefan hits enter and is redirected to the map page
-            location_input.send_keys(Keys.ENTER)
         else:
             print('Geolocation enabled')
 

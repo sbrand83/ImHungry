@@ -25,27 +25,33 @@
 
     <div id="map"></div>
     <script>
-      var loc_header = document.getElementById('location_text');
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          function(position) {
-            loc_header.innerHTML = "Your Location: lat: " + position.coords.latitude +
-              " and lng: " + position.coords.longitude;
-          },
-          function(error) {
-            switch(error.code) {
-              case error.PERMISSION_DENIED:
-                loc_header.innerHTML = "User denied the request to use geolocation."
-                break;
-              case error.POSITION_UNAVAILABLE:
-                loc_header.innerHTML = "Location information unavailable. Please enter in your current position."
-                break;
+      document.addEventListener("DOMContentLoaded", function() {
+        var loc_header = document.getElementById('location_text');
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(
+            function(position) {
+              loc_header.innerHTML = "Your Location: lat: " + position.coords.latitude +
+                " and lng: " + position.coords.longitude;
+              loc_error = document.getElementById('location_error');
+              loc_error.className += 'hidden';
+              loc_input = document.getElementById('location_input');
+              loc_input.className += 'hidden';
+            },
+            function(error) {
+              switch(error.code) {
+                case error.PERMISSION_DENIED:
+                  loc_header.innerHTML = "Your Location: User denied the request to use geolocation."
+                  break;
+                case error.POSITION_UNAVAILABLE:
+                  loc_header.innerHTML = "Your Location: Location information unavailable. Please enter in your current position."
+                  break;
+              }
             }
-          }
-        );
-      } else {
-        loc_header.innerHTML = "Geolocation is not supported by this browser. Please manually input your current location."
-      }
+          );
+        } else {
+          loc_header.innerHTML = "Your Location: Geolocation is not supported by this browser. Please manually input your current location."
+        }
+      });
     </script>
     <script>
       var map;
