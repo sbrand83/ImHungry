@@ -1,18 +1,12 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>I'm Hungry!</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% extends "base.html" %}
 
+{% block content %}
     <style>
       #map {
         height: 500px;
         width: 500px;
       }
     </style>
-  </head>
-  <body>
     <h1>I'm Hungry!</h1>
 
     <p id="location_error">Error occured when trying to find your location. Please enter in your location below.</p>
@@ -24,6 +18,9 @@
     </form>
 
     <div id="map"></div>
+{% endblock %}
+
+{% block page_specific_scripts %}
     <script>
       document.addEventListener("DOMContentLoaded", function() {
         var loc_header = document.getElementById('location_text');
@@ -76,5 +73,4 @@
       }
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?v=3.24&key=AIzaSyDWbGAPsgPdmYfdo2sI0vaPecGKkoKPdEc&callback=initMap" async defer></script>
-  </body>
-</html>
+{% endblock %}
