@@ -35,11 +35,11 @@ class NewVisitorTest(unittest.TestCase):
 
         # Stefan sees that his location has been found
         location_text = self.browser.find_element_by_id('location_text').text
-        self.assertIn('Your Location: ', location_text)
+        self.assertIn('Your Location:', location_text)
 
         # There is a map in the center of the screen that shows this location
         the_map = self.browser.find_element_by_id('map')
-        self.assertNotNone(the_map)
+        self.assertIsNotNone(the_map)
         self.fail("Finish the tests!")
 
         # There is button that when clicked picks a random restaurant
