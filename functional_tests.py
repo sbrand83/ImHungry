@@ -1,4 +1,5 @@
 from selenium import webdriver
+from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
 import unittest
@@ -36,6 +37,23 @@ class NewVisitorTest(unittest.TestCase):
         # Stefan sees that his location has been found
         location_text = self.browser.find_element_by_id('location_text').text
         self.assertIn('Your Location:', location_text)
+
+        # If the location is not found or there is another error, there is a
+        # text input to manually enter in the current location.
+        location_error = self.browser.find_element_by_id('location_error')
+        if 'visible' in location_error.get_attribute('class').split():
+            print('There was an error finding location')
+        try:
+            location_error = self.browser.find_element_by_css_selector('#location_error.visible')
+
+            # should be error with finding location
+            location_input = self.browser.find_element_by_id('location_input')
+            self.assertEqual(
+                    location_input.get_attribute('placeholder'),
+                    'Enter in your location'
+            )
+        except NoSuchElementException:
+            print("There was no error with finding location")
 
         # There is a map in the center of the screen that shows this location
         the_map = self.browser.find_element_by_id('map')

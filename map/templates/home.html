@@ -1,6 +1,16 @@
+<!DOCTYPE html>
 <html>
   <head>
     <title>I'm Hungry!</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+      #map {
+        height: 500px;
+        width: 500px;
+      }
+    </style>
   </head>
   <body>
     <h1>I'm Hungry!</h1>
@@ -8,5 +18,51 @@
     <h2 id="location_text">Your Location: </h2>
 
     <div id="map"></div>
+    <script>
+      var loc_header = document.getElementById('location_text');
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          function(position) {
+            loc_header.innerHTML = "Your Location: lat: " + position.coords.latitude +
+              " and lng: " + position.coords.longitude;
+          },
+          function(error) {
+            switch(error.code) {
+              case error.PERMISSION_DENIED:
+                loc_header.innerHTML = "User denied the request to use geolocation."
+                break;
+              case error.POSITION_UNAVAILABLE:
+                loc_header.innerHTML = "Location information unavailable. Please enter in your current position."
+                break;
+            }
+          }
+        );
+      } else {
+        loc_header.innerHTML = "Geolocation is not supported by this browser. Please manually input your current location."
+      }
+    </script>
+    <script>
+      var map;
+      function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+          center: {lat: -34.397, lng: 150.644},
+          zoom: 8,
+          zoomControl: true,
+          mapTypeControl: true,
+          mapTypeControlOptions: {
+            mapTypeIds: [
+              google.maps.MapTypeId.ROADMAP,
+              google.maps.MapTypeId.HYBRID,
+            ]
+          },
+          scaleControl: true,
+          streetViewControl: true,
+          rotateControl: false,
+          fullscreenControl: false,
+
+        });
+      }
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.24&key=AIzaSyDWbGAPsgPdmYfdo2sI0vaPecGKkoKPdEc&callback=initMap" async defer></script>
   </body>
 </html>
