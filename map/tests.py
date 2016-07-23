@@ -16,3 +16,7 @@ class HomePageTest(TestCase):
         response = home_page(request)
         expected_html = render_to_string('home.html')
         self.assertEqual(response.content.decode(), expected_html)
+
+    def test_home_page_button_redirects_to_map(self):
+        response = self.client.get('/')
+        self.assert

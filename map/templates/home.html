@@ -1,40 +1,56 @@
 {% extends "base.html" %}
 
+{% block style %}
+  <style>
+    .hidden {
+      visibility: hidden;
+    }
+  </style>
+{% endblock style %}
+
 {% block content %}
-    <style>
-      #map {
-        height: 500px;
-        width: 500px;
-      }
-    </style>
-    <h1>I'm Hungry!</h1>
+    <p id="location_error" class="hidden">Error occured when trying to find your location. Please enter in your location below.</p>
 
-    <p id="location_error">Error occured when trying to find your location. Please enter in your location below.</p>
-
-    <h2 id="location_text">Your Location: </h2>
-
-    <form>
+    <form id="location_form">
       <input id="location_input" type="text" placeholder="Enter your location"/>
     </form>
 
-    <div id="map"></div>
+
 {% endblock %}
 
 {% block page_specific_scripts %}
     <script>
       document.addEventListener("DOMContentLoaded", function() {
+        console.log("Content loaded")
+
         var loc_header = document.getElementById('location_text');
+
+        // If geolocation is available, try to find user's location
+        // If successful, show lat and long coords. and hide manual input form
+        // If failure, show manual input form (not hidden)
         if (navigator.geolocation) {
           navigator.geolocation.getCurrentPosition(
             function(position) {
+              console.log("found location");
+              var location_form = document.getElementById('location_form');
+              location_form.className += 'hidden';
               loc_header.innerHTML = "Your Location: lat: " + position.coords.latitude +
                 " and lng: " + position.coords.longitude;
-              loc_error = document.getElementById('location_error');
-              loc_error.className += 'hidden';
-              loc_input = document.getElementById('location_input');
-              loc_input.className += 'hidden';
             },
             function(error) {
+              console.log("location error");
+              var location_error = document.getElementById('location_error');
+              var location_form = document.getElementById('location_form');
+
+              //removes the class "hidden" from the class list
+              location_error.className = location_error.className.replace(
+                  /(?:^|\s)hidden(?!\S)/g, ''
+              );
+
+              location_form.className = location_form.className.replace(
+                  /(?:^|\s)hidden(?!\S)/g, ''
+              );
+
               switch(error.code) {
                 case error.PERMISSION_DENIED:
                   loc_header.innerHTML = "Your Location: User denied the request to use geolocation."
@@ -50,27 +66,4 @@
         }
       });
     </script>
-    <script>
-      var map;
-      function initMap() {
-        map = new google.maps.Map(document.getElementById('map'), {
-          center: {lat: -34.397, lng: 150.644},
-          zoom: 8,
-          zoomControl: true,
-          mapTypeControl: true,
-          mapTypeControlOptions: {
-            mapTypeIds: [
-              google.maps.MapTypeId.ROADMAP,
-              google.maps.MapTypeId.HYBRID,
-            ]
-          },
-          scaleControl: true,
-          streetViewControl: true,
-          rotateControl: false,
-          fullscreenControl: false,
-
-        });
-      }
-    </script>
-    <script src="https://maps.googleapis.com/maps/api/js?v=3.24&key=AIzaSyDWbGAPsgPdmYfdo2sI0vaPecGKkoKPdEc&callback=initMap" async defer></script>
 {% endblock %}

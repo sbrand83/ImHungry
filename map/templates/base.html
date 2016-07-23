@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>I'm Hungry!</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    {% block style %}
+      <style>
+        #map {
+          height: 500px;
+          width: 500px;
+        }
+      </style>
+    {% endblock %}
+  </head>
+  <body>
+    {% block header %}
+      <div id="header">
+        <h1>I'm Hungry!</h1>
+        <p>Sometimes you need help deciding where to eat</p>
+        <p id="location_text">Your Location: </p>
+      </div>
+    {% endblock %}
+
+    {% block content %}
+
+    {% endblock %}
+
+    {% block footer %}
+      <div id="footer">
+        <p>footer</p>
+      </div>
+    {% endblock %}
+
+    {% block general_scripts %}
+
+    {% endblock %}
+
+    {% block page_specific_scripts %}
+
+    {% endblock %}
+
+
+  </body>
+</html>

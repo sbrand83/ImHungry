@@ -18,4 +18,5 @@ from map import views
 
 urlpatterns = [
     url(r'^$', views.home_page, name='home'),
+    url(r'^map$', views.map, name='map'),
 ]

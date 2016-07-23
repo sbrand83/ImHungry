@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h2>Map page</h2>
+
+  <div id="map"></div>
+{% endblock %}
+
+{% block page_specific_scripts %}
+  <script>
+    var map;
+    function initMap() {
+      map = new google.maps.Map(document.getElementById('map'), {
+        center: {lat: -34.397, lng: 150.644},
+        zoom: 8,
+        zoomControl: true,
+        mapTypeControl: true,
+        mapTypeControlOptions: {
+          mapTypeIds: [
+            google.maps.MapTypeId.ROADMAP,
+            google.maps.MapTypeId.HYBRID,
+          ]
+        },
+        scaleControl: true,
+        streetViewControl: true,
+        rotateControl: false,
+        fullscreenControl: false,
+
+      });
+    }
+  </script>
+  <script src="https://maps.googleapis.com/maps/api/js?v=3.24&key=AIzaSyDWbGAPsgPdmYfdo2sI0vaPecGKkoKPdEc&callback=initMap" async defer></script>
+{% endblock %}
