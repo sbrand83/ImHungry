@@ -1,7 +1,8 @@
 from selenium import webdriver
-from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
@@ -71,7 +72,8 @@ class NewVisitorTest(unittest.TestCase):
         # text input to manually enter in the current location.
         location_error = self.browser.find_element_by_id('location_error')
         location_form = self.browser.find_element_by_id('location_form')
-        location_input = self.browser.find_element_by_id('location_input')
+        lat_input = self.browser.find_element_by_id('lat_input')
+        lng_input = self.browser.find_element_by_id('lng_input')
 
 
         # With geolocation disabled, it is certain that the user will have to manually
@@ -84,9 +86,21 @@ class NewVisitorTest(unittest.TestCase):
             self.assertTrue(location_form.is_displayed())
 
             self.assertEqual(
-                    location_input.get_attribute('placeholder'),
-                    'Enter your location'
+                    lat_input.get_attribute('placeholder'),
+                    'Enter your latitude'
             )
+            self.assertEqual(
+                    lng_input.get_attribute('placeholder'),
+                    'Enter your longitude'
+            )
+
+            # enter data into the form manually (Chicago)
+            lat_input.send_keys('41.875206')
+            lng_input.send_keys('-87.630556')
+
+            # submit the form as POST request
+            lng_input.send_keys(Keys.ENTER)
+
         else:
             # Eventhough geolocation is enabled does not mean that the location will
             # be successfully found. Need to also check for an error before checking
@@ -94,20 +108,53 @@ class NewVisitorTest(unittest.TestCase):
 
             print('Geolocation enabled')
 
-            # case where allow it but unsuccessful, not sure how to make it fail
+            try:
+                # try to find if error message is present, throws exception if
+                # the error is hidden and does tests for successful geolocation
 
-            # On success
+                # wait to see if error message will become unhidden, if not times out
+                # TODO: this causes the successful case to wait for timeout period
+                # would be better if only had to wait when it failed
+                self.wait_for_class_not_on_given_element('hidden', location_error)
 
-            self.wait_for_class_on_given_element("hidden", location_form)
+                print('Geolocation failed')
 
-            # checks that the element is actually hidden
-            self.assertFalse(location_form.is_displayed())
+                # the form should also be visible
+                self.wait_for_class_not_on_given_element("hidden", location_form)
+                self.assertTrue(location_form.is_displayed())
+
+                self.assertEqual(
+                        lat_input.get_attribute('placeholder'),
+                        'Enter your latitude'
+                )
+                self.assertEqual(
+                        lng_input.get_attribute('placeholder'),
+                        'Enter your longitude'
+                )
+
+                # enter data into the form manually (Chicago)
+                lat_input.send_keys('41.875206')
+                lng_input.send_keys('-87.630556')
+
+                # submit the form as POST request
+                lng_input.send_keys(Keys.ENTER)
+
+            except TimeoutException:
+                # On success
+                self.wait_for_class_on_given_element("hidden", location_form)
+
+                # checks that the element is actually hidden
+                self.assertFalse(location_form.is_displayed())
+
+                # user can see current location in lat/lng coords
+                self.assertIn('lat', lat_text)
+                self.assertIn('lng', lng_text)
 
         # The page gets redirected to show a map
-        self.fail("Finish the tests!")
+        the_map = self.browser.find_element_by_id('map')
 
         # There is a map in the center of the screen that shows this location
-        the_map = self.browser.find_element_by_id('map')
+        self.fail("Finish the tests!")
         self.assertIsNotNone(the_map)
 
         # There is button that when clicked picks a random restaurant

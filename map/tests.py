@@ -20,11 +20,13 @@ class HomePageTest(TestCase):
         expected_html = render_to_string('home.html')
         self.assertEqual(response.content.decode(), expected_html)
 
-    def test_home_page_button_redirects_to_map(self):
-        response = self.client.get('/')
-
-        # click "Find restaurants around me"ish button to be redirected
-        url_params = '?lat={lat}&lng={lng}'.format(lat=fake_lat, lng=fake_lng)
+#    def test_home_page_button_redirects_to_map(self):
+#        client = self.client
+#
+#        response = self.client.get('/')
+#
+#        # click "Find restaurants around me"ish button to be redirected
+#        url_params = '?lat={lat}&lng={lng}'.format(lat=fake_lat, lng=fake_lng)
 
 class MapPageTest(TestCase):
 

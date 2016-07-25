@@ -11,8 +11,11 @@
 {% block content %}
     <p id="location_error" class="hidden">Error occured when trying to find your location. Please enter in your location below.</p>
 
-    <form id="location_form">
-      <input id="location_input" type="text" placeholder="Enter your location"/>
+    <form id="location_form" action="/map">
+      <input id="lat_input" type="text" name="lat" placeholder="Enter your latitude"/>
+      <input id="lng_input" type="text" name="lng" placeholder="Enter your longitude"/>
+
+      <input type="submit" value="Find a place to eat!"/>
     </form>
 
 
