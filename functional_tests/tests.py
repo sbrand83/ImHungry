@@ -154,7 +154,7 @@ class NewVisitorTest(unittest.TestCase):
         the_map = self.browser.find_element_by_id('map')
 
         # There is a map in the center of the screen that shows this location
-        self.fail("Finish the tests!")
+        self.fail("When geolocation works, no way to submit to go to map, need button")
         self.assertIsNotNone(the_map)
 
         # There is button that when clicked picks a random restaurant

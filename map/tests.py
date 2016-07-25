@@ -20,13 +20,6 @@ class HomePageTest(TestCase):
         expected_html = render_to_string('home.html')
         self.assertEqual(response.content.decode(), expected_html)
 
-#    def test_home_page_button_redirects_to_map(self):
-#        client = self.client
-#
-#        response = self.client.get('/')
-#
-#        # click "Find restaurants around me"ish button to be redirected
-#        url_params = '?lat={lat}&lng={lng}'.format(lat=fake_lat, lng=fake_lng)
 
 class MapPageTest(TestCase):
 
@@ -51,7 +44,8 @@ class MapPageTest(TestCase):
         # missing lat
         response = client.get('/map', {'lng': 20})
         self.assertRedirects(response, '/')
-    def test_redirect_if_coordinates_invalid(self):
+
+    def test_redirect_if_coordinates_invalid_value(self):
         client = self.client
 
         # lat invalid if abs(lat) > 90
@@ -73,4 +67,10 @@ class MapPageTest(TestCase):
 
         # lng < -180
         response = client.get('/map', {'lat': 20, 'lng': -180.1})
+        self.assertRedirects(response, '/')
+
+    def test_redirect_if_get_is_NaN(self):
+        client = self.client
+
+        response = client.get('/map', {'lat': 'NaN', 'lng': 20})
         self.assertRedirects(response, '/')
