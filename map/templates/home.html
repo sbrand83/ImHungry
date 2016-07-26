@@ -15,8 +15,11 @@
       <input id="lat_input" type="text" name="lat" placeholder="Enter your latitude"/>
       <input id="lng_input" type="text" name="lng" placeholder="Enter your longitude"/>
 
-      <input type="submit" value="Find a place to eat!"/>
     </form>
+
+    <button id="food_button" type="button">
+      Find a place to eat!
+    </button>
 
 
 {% endblock %}
@@ -25,6 +28,8 @@
     <script>
       document.addEventListener("DOMContentLoaded", function() {
         console.log("Content loaded")
+        var coord_form = document.getElementById('location_form');
+        document.getElementById('food_button').addEventListener('click', function(){submit_form(coord_form)})
 
         var loc_header = document.getElementById('location_text');
 
@@ -39,6 +44,7 @@
               location_form.className += 'hidden';
               loc_header.innerHTML = "Your Location: lat: " + position.coords.latitude +
                 " and lng: " + position.coords.longitude;
+              fill_in_form(position.coords.latitude, position.coords.longitude);
             },
             function(error) {
               console.log("location error");
@@ -68,5 +74,21 @@
           loc_header.innerHTML = "Your Location: Geolocation is not supported by this browser. Please manually input your current location."
         }
       });
+    </script>
+    <script>
+      var fill_in_form = function(lat, lng){
+        var lat_field = document.getElementById('lat_input');
+        var lng_field = document.getElementById('lng_input');
+
+        lat_field.value = lat;
+        lng_field.value = lng;
+
+        console.log(lat_field.value);
+        console.log(lng_field.value);
+      }
+
+      var submit_form = function(form){
+        form.submit();
+      }
     </script>
 {% endblock %}

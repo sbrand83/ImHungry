@@ -98,9 +98,6 @@ class NewVisitorTest(unittest.TestCase):
             lat_input.send_keys('41.875206')
             lng_input.send_keys('-87.630556')
 
-            # submit the form as POST request
-            lng_input.send_keys(Keys.ENTER)
-
         else:
             # Eventhough geolocation is enabled does not mean that the location will
             # be successfully found. Need to also check for an error before checking
@@ -136,9 +133,6 @@ class NewVisitorTest(unittest.TestCase):
                 lat_input.send_keys('41.875206')
                 lng_input.send_keys('-87.630556')
 
-                # submit the form as POST request
-                lng_input.send_keys(Keys.ENTER)
-
             except TimeoutException:
                 # On success
                 self.wait_for_class_on_given_element("hidden", location_form)
@@ -150,16 +144,17 @@ class NewVisitorTest(unittest.TestCase):
                 self.assertIn('lat', lat_text)
                 self.assertIn('lng', lng_text)
 
-        # The page gets redirected to show a map
+        # There is a button that says "Find a place to eat". When Stefan clicks it,
+        # the page gets redirected to show a map
+        button = self.browser.find_element_by_id('food_button')
+        self.assertEqual(button.text, "Find a place to eat!")
+
+        button.click()
+
         the_map = self.browser.find_element_by_id('map')
 
         # There is a map in the center of the screen that shows this location
-        self.fail("When geolocation works, no way to submit to go to map, need button")
-        self.assertIsNotNone(the_map)
-
-        # There is button that when clicked picks a random restaurant
-
-        # The location of the restaurant is displayed on the map
+        self.fail("Finish the tests!")
 
         # Information about the restaurant appears below the map
 
