@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block style %}
+  <style>
+    .hidden {
+      visibility: hidden;
+    }
+  </style>
+{% endblock style %}
+
+{% block content %}
+    <p id="location_error" class="hidden">Error occured when trying to find your location. Please enter in your location below.</p>
+
+    <form id="location_form" action="/map">
+      <input id="lat_input" type="text" name="lat" placeholder="Enter your latitude"/>
+      <input id="lng_input" type="text" name="lng" placeholder="Enter your longitude"/>
+
+    </form>
+
+    <button id="food_button" type="button">
+      Find a place to eat!
+    </button>
+
+
+{% endblock %}
+
+{% block page_specific_scripts %}
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        console.log("Content loaded")
+        var coord_form = document.getElementById('location_form');
+        document.getElementById('food_button').addEventListener('click', function(){submit_form(coord_form)})
+
+        var loc_header = document.getElementById('location_text');
+
+        // If geolocation is available, try to find user's location
+        // If successful, show lat and long coords. and hide manual input form
+        // If failure, show manual input form (not hidden)
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(
+            function(position) {
+              console.log("found location");
+              var location_form = document.getElementById('location_form');
+              location_form.className += 'hidden';
+              loc_header.innerHTML = "Your Location: lat: " + position.coords.latitude +
+                " and lng: " + position.coords.longitude;
+              fill_in_form(position.coords.latitude, position.coords.longitude);
+            },
+            function(error) {
+              console.log("location error");
+              var location_error = document.getElementById('location_error');
+              var location_form = document.getElementById('location_form');
+
+              //removes the class "hidden" from the class list
+              location_error.className = location_error.className.replace(
+                  /(?:^|\s)hidden(?!\S)/g, ''
+              );
+
+              location_form.className = location_form.className.replace(
+                  /(?:^|\s)hidden(?!\S)/g, ''
+              );
+
+              switch(error.code) {
+                case error.PERMISSION_DENIED:
+                  loc_header.innerHTML = "Your Location: User denied the request to use geolocation."
+                  break;
+                case error.POSITION_UNAVAILABLE:
+                  loc_header.innerHTML = "Your Location: Location information unavailable. Please enter in your current position."
+                  break;
+              }
+            }
+          );
+        } else {
+          loc_header.innerHTML = "Your Location: Geolocation is not supported by this browser. Please manually input your current location."
+        }
+      });
+    </script>
+    <script>
+      var fill_in_form = function(lat, lng){
+        var lat_field = document.getElementById('lat_input');
+        var lng_field = document.getElementById('lng_input');
+
+        lat_field.value = lat;
+        lng_field.value = lng;
+
+        console.log(lat_field.value);
+        console.log(lng_field.value);
+      }
+
+      var submit_form = function(form){
+        form.submit();
+      }
+    </script>
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h2>Map page</h2>
+
+  <p id="lat">lat={{ lat }}</p>
+  <p id="lng">lng={{ lng }}</p>
+
+  <div id="map"></div>
+{% endblock %}
+
+{% block page_specific_scripts %}
+  <script src="https://maps.googleapis.com/maps/api/js?v=3.24&key=AIzaSyDWbGAPsgPdmYfdo2sI0vaPecGKkoKPdEc&callback=initMap" async defer></script>
+  <script>
+    var map;
+    var my_location;
+    function initMap() {
+      my_location = {
+        lat: parseFloat(document.getElementById('lat').innerHTML.substring(4)),
+        lng: parseFloat(document.getElementById('lng').innerHTML.substring(4))
+      };
+      map = new google.maps.Map(document.getElementById('map'), {
+        center: my_location,
+        zoom: 14,
+        zoomControl: true,
+        mapTypeControl: true,
+        mapTypeControlOptions: {
+          mapTypeIds: [
+            google.maps.MapTypeId.ROADMAP,
+            google.maps.MapTypeId.HYBRID,
+          ]
+        },
+        scaleControl: true,
+        streetViewControl: true,
+        rotateControl: false,
+        fullscreenControl: false,
+
+      });
+      console.log(my_location);
+      var location_marker = new google.maps.Marker({
+        position: my_location,
+        map: map,
+        title: 'You are here.'
+      });
+    };
+  </script>
+{% endblock %}
